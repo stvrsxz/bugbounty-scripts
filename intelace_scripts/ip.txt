@@ -1,0 +1,10 @@
+mkdir -p _output_/_target_/;touch _output_/_target_/ports.txt
+_blocker_
+echo -e "\e[31m[+] Running ipinfo search\e[0m";http -b ipinfo.io/_target_
+_block:massnmap_
+echo -e "\e[31m[+] Running masscan\e[0m";masscan _target_ --open -p1-65535 | grep "Discovered open port" | cut -d " " -f 4 | cut -d "/" -f 1 | anew _output_/_target_/ports.txt
+echo -e "\e[31m[+] Running nmap on open ports\e[0m";nmap -sV --script vulners -sC _target_  -p $(tr '\n' , <_output_/_target_/ports.txt)
+_block:massnmap_
+echo -e "\e[31m[+] Running reverse dns\e[0m"; dig -x _target_
+echo -e "\e[31m[+] Running shodan search\e[0m";shodan host _target_
+echo -e "\e[31m[+] Running censys search\e[0m";censys search "ip:_target_"

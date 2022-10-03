@@ -1,0 +1,23 @@
+mkdir -p _output_/_cleantarget_/
+_blocker_
+_block:gau_
+echo -e "\e[31m[+] Running gau\e[0m";
+touch _output_/_cleantarget_/gau-_cleantarget_;
+echo _target_ | unfurl domain | gau | grep --color "_target_"  | tee _output_/_cleantarget_/gau-_cleantarget_ ;
+echo -e "\e[31m[+] Running gau urinteresting\e[0m";
+cat _output_/_cleantarget_/gau-_cleantarget_ | urinteresting;
+echo -e "\e[31m[+] Running gau live\e[0m";
+cat _output_/_cleantarget_/gau-_cleantarget_ | httpx -status-code -verbose -title;
+_block:gau_
+echo -e "\e[31m[+] Running whatweb\e[0m"; ~/recon/tools/WhatWeb/whatweb _proto_://_target_ -v -a 3
+echo -e "\e[31m[+] Running paramspider\e[0m"; ~/recon/tools/ParamSpider/venv/bin/python3 ~/recon/tools/ParamSpider/paramspider.py -d _target_ -o  _output_/_cleantarget_/paramspider-_cleantarget_ | grep --color "_target_"
+# echo -e "\e[31m[+] Running nikto on _proto_://_target_\e[0m"; nikto -h _proto_://_target_ -maxtime 300;
+echo -e "\e[31m[+] Running hakrawler on _proto_://_target_\e[0m"; echo _proto_://_target_ | hakrawler
+# echo -e "\e[31m[+] Running ffuf on _proto_://_target_\e[0m"; ffuf -w ~/paths.txt -u _proto_://_target_/FUZZ -v -c -ac
+# echo -e "\e[31m[+] Running arjun GET on _proto_://_target_\e[0m"; arjun -u _proto_://_target_ -m GET |  grep -v --color "Processing:"
+# echo -e "\e[31m[+] Running arjun POST on _proto_://_target_\e[0m"; arjun -u _proto_://_target_ -m POST |  grep -v --color "Processing:"
+echo -e "\e[31m[+] Getting first 50 lines from _proto_://_target_\e[0m";http -b _proto_://_target_  |  head -n 50
+echo -e "\e[31m[+] Getting title for  _proto_://_target_\e[0m"; echo _proto_://_target_ | html-tool tags title
+echo -e "\e[31m[+] Getting comments from  _proto_://_target_\e[0m"; echo _proto_://_target_ | html-tool comments
+echo -e "\e[31m[+] Getting src and hrefs for  _proto_://_target_\e[0m"; echo _proto_://_target_ | html-tool attribs src href | sort -u
+echo -e "\e[31m[+] Running wappalyzer on  _proto_://_target_\e[0m"; wappalyzer  _proto_://_target_ -P

@@ -1,0 +1,23 @@
+_block:domains_file_setup_
+mkdir __output_
+touch __output_/domains
+_block:domains_file_setup_
+_blocker_
+_block:subdomain_
+echo -e "\e[31m[+] Running assetfinder\e[0m"; assetfinder --subs-only _target_ | grep "._target_$" | anew __output_/domains; sort -u -o __output_/domains __output_/domains;
+echo -e "\e[31m[+] Running ammass\e[0m"; amass enum -active -ef __output_/domains -o domains_amass -d _target_;  cat domains_amass | anew __output_/domains;  rm domains_amass;
+echo -e "\e[31m[+] Running shuffle\e[0m";echo _target_ | shuffledns -w ~/recon/tools/SecLists/Discovery/DNS/dns-Jhaddix.txt -r ~/recon/tools/massdns/lists/resolvers.txt -v -massdns /bin/massdns | sed -e 's/\(.*\)/\L\1/' |  anew __output_/domains;
+#echo -e "\e[31m[+] Running tok+ettu\e[0m";cat __output_/domains | tok | sort -u |ettu --depth=2 _target_ | sed -e 's/\(.*\)/\L\1/' | sort -u | tee ettu_domains; cat ettu_domains | anew __output_/domains
+echo "\e[31m[+] Running git subdomains\e[0m"; python3 ~/recon/tools/github-subdomains.py -t $GH_TOKEN -d _target_ | anew __output_/domains
+echo -e "\e[31m[+] Running chaos\e[0m";chaos -d _target_ -silent | anew __output_/domains
+_block:subdomain_
+_blocker_
+echo -e "\e[31m[+] Running httprobe\e[0m"; cat __output_/domains | httprobe | tee __output_/hosts
+_blocker_
+echo -e "\e[31m[+] Running meg\e[0m"; meg -v / __output_/hosts __output_/out
+#echo -e "\e[31m[+] Running nuclei\e[0m";nuclei -l __output_/hosts -t ~/recon/tools/nuclei-templates/tokens/*.yaml
+_blocker_
+echo -e "\e[31m[+] Checking domains from gf \e[0m"; cd __output_/out ; gf urls | grep "._target_" | unfurl -u domains | tee gf_domains; cat gf_domains | anew ../domains; cat gf_domains |httprobe |tee -a ../hosts; rm gf_domains;cd;
+_blocker_
+sort -u -o __output_/domains __output_/domains;
+_blocker_

@@ -1,0 +1,12 @@
+mkdir -p _output_/_target_/
+_blocker_
+_block:dig_
+echo -e "\e[31m[+] Running dig\e[0m";dig +noall +answer _target_;
+echo -e "\e[31m[+] Running dig mx\e[0m";dig  +noall +answer _target_ mx;
+echo -e "\e[31m[+] Running dig cname \e[0m";dig  +noall +answer  _target_ cname;
+echo -e "\e[31m[+] Running dig txt\e[0m";dig  +noall +answer  _target_ txt;
+_block:dig_
+echo -e "\e[31m[+] Running domain nmap\e[0m";nmap -sV --script vulners -sC _target_;
+echo -e "\e[31m[+] Running httpx on some ports\e[0m";echo _target_ | httpx -status-code -verbose -title -ports 80,443,8080,3000,5000,8000,8443,8888,9000
+echo -e "\e[31m[+] Echoing urlscan search query\e[0m"; echo "https://urlscan.io/search/#_target_"
+echo -e "\e[31m[+] Echoing google dork query\e[0m"; echo "https://www.google.com/search?q=site:_target_"
