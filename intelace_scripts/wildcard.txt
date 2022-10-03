@@ -10,6 +10,7 @@ echo -e "\e[31m[+] Running shuffle\e[0m";shuffledns -d _target_ -w ~/recon/tools
 #echo -e "\e[31m[+] Running tok+ettu\e[0m";cat __output_/domains | tok | sort -u |ettu --depth=2 _target_ | sed -e 's/\(.*\)/\L\1/' | sort -u | tee ettu_domains; cat ettu_domains | anew __output_/domains
 echo "\e[31m[+] Running git subdomains\e[0m"; python3 ~/recon/tools/github-subdomains.py -t $GH_TOKEN -d _target_ | anew __output_/domains
 echo -e "\e[31m[+] Running chaos\e[0m";chaos -d _target_ -silent | anew __output_/domains
+echo -e "\e[31m[+] Running crt.ch\e[0m";curl -s https://crt.sh/\?q\=\%._target_\&output\=json | gron | grep name_value  | awk '{print $3}' | xargs -I {} echo -e {} | sort -u  | sed 's/;//g' | sed 's/*.//g' | sort -u |anew ___output_/domains
 _block:subdomain_
 _blocker_
 echo -e "\e[31m[+] Running httprobe\e[0m"; cat __output_/domains | httprobe | tee __output_/hosts
