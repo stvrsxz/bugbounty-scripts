@@ -51,7 +51,7 @@ def crawl_urls():
             ):
                 continue
 
-            print(f"Extracting paths for {crawled_url}")
+            print(f"Extracting paths from {crawled_url}")
 
             clean_url = (
                 url.replace("http://", "")
