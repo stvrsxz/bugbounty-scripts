@@ -193,3 +193,14 @@ cd ~/recon/tools
 git clone https://github.com/danielmiessler/SecLists.git
 cd
 echo "Done"
+
+echo "Installing LinkFinder"
+cd ~/recon/tools
+git clone https://github.com/GerbenJavado/LinkFinder.git
+cd LinkFinder
+python3 -m venv venv
+source venv/bin/activate
+pip3 install -r requirements.txt
+deactivate
+cd
+echo "Done"
