@@ -5,7 +5,7 @@ import subprocess
 from time import sleep
 
 DATE = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
-ROOT_DIR = os.path.expanduser("linkfinder")
+ROOT_DIR = os.path.expanduser("~/linkfinder")
 INPUT_URLS_PATH = f"{ROOT_DIR}/urls.txt"
 CRAWLED_URLS_PATH = f"{ROOT_DIR}/crawled_urls_{DATE}.txt"
 
